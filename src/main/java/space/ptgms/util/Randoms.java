@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.bukkit.ChatColor;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
+import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,6 +31,11 @@ public class Randoms implements CommandExecutor, TabCompleter {
             return false;
         }
 
+        if (args.length == 0) {
+            sender.sendMessage("You must specify a player!");
+            return false;
+        }
+
         Player player = sender.getServer().getPlayer(args[0]);
 
         if (player == null) {
@@ -37,21 +43,29 @@ public class Randoms implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        EntityEffect effect = null;
-
         if (args.length == 2) {
             if (args[1].equalsIgnoreCase("guardian")) {
-                effect = EntityEffect.GUARDIAN_TARGET;
+                // send MOB_APPEARANCE particle
+                Particle particle = Particle.MOB_APPEARANCE;
+                player.spawnParticle(particle, player.getLocation(), 100);
+                player.playSound(player.getLocation(), "entity.elder_guardian.curse", 1, 1);
             } else if (args[1].equalsIgnoreCase("totem")) {
-                effect = EntityEffect.TOTEM_RESURRECT;
+                EntityEffect effect = EntityEffect.TOTEM_RESURRECT;
+                player.playEffect(effect);
+            } else if (args[1].equalsIgnoreCase("creeper")) {
+                player.playSound(player.getLocation(), "entity.creeper.primed", 1, 1);
+            } else if (args[1].equalsIgnoreCase("explosion")) {
+                Particle particle = Particle.EXPLOSION_HUGE;
+                player.spawnParticle(particle, player.getLocation(), 10);
+                player.playSound(player.getLocation(), "entity.generic.explode", 1, 1);
             } else {
                 sender.sendMessage("That is not a valid effect!");
                 return false;
             }
+        } else {
+            sender.sendMessage(ChatColor.RED + "You must specify an effect!");
+            return false;
         }
-
-        assert effect != null;
-        player.playEffect(effect);
         player.sendMessage(ChatColor.DARK_PURPLE + "You have been jumpscared by " + sender.getName() + "!");
         return true;
     }
@@ -216,7 +230,7 @@ public class Randoms implements CommandExecutor, TabCompleter {
                 sender.getServer().getOnlinePlayers().forEach(player -> players.add(player.getName()));
                 return players;
             } else if (args.length == 2) {
-                return List.of("guardian", "totem");
+                return List.of("guardian", "totem", "creeper", "explosion");
             }
         }
         return null;

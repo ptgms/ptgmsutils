@@ -28,6 +28,6 @@ commands:
     permission: ptgmsUtils.spawnlimit.set
   jumpscare:
     description: Scare someone
-    usage: /<command> <player> [type (totem, guardian)]
+    usage: /<command> <player> [type (totem, guardian, explosion, creeper)]
     permission: ptgmsUtils.jumpscare
     aliases: [js, scare]
