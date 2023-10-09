@@ -1,0 +1,4 @@
+/.gradle/*/*
+/build/
+/.gradle/8.1.1/
+/.gradle/buildOutputCleanup/*

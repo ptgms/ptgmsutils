@@ -18,7 +18,7 @@ public class KickMeClass implements CommandExecutor, TabCompleter {
             return false;
         }
         sender.getServer().broadcastMessage(sender.getName() + " feels very dramatic today.");
-        Objects.requireNonNull(sender.getServer().getPlayer(sender.getName())).kickPlayer("You kicked yourself!");
+        ((Player) sender).kickPlayer("You kicked yourself!");
         return true;
     }
 
