@@ -3,7 +3,9 @@ package space.ptgms.util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -39,6 +41,14 @@ public class PlayerController implements Listener {
                 });
             }
         }, 20, 20);
+    }
+
+    @EventHandler
+    public void onBlockDamageEvent(BlockDamageEvent event) {
+        if (!event.getPlayer().hasPermission("ptgmsUtils.spawnlimit")) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.BOLD + "" + ChatColor.RED + "You aren't allowed to break any blocks!");
+        }
     }
 
 }

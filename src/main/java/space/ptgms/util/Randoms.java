@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Objects;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Effect;
+import org.bukkit.EntityEffect;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 
 public class Randoms implements CommandExecutor, TabCompleter {
     @Override
@@ -16,8 +19,41 @@ public class Randoms implements CommandExecutor, TabCompleter {
         return switch (command.getName()) {
             case "8ball" -> ask8ball(sender, args);
             case "calculator" -> calculator(sender, args);
+            case "jumpscare" -> jumpscare(sender, args);
             default -> false;
         };
+    }
+
+    private boolean jumpscare(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("ptgmsUtils.jumpscare")) {
+            sender.sendMessage("You do not have permission to use this command!");
+            return false;
+        }
+
+        Player player = sender.getServer().getPlayer(args[0]);
+
+        if (player == null) {
+            sender.sendMessage("That player is not online or does not exist!");
+            return false;
+        }
+
+        EntityEffect effect = null;
+
+        if (args.length == 2) {
+            if (args[1].equalsIgnoreCase("guardian")) {
+                effect = EntityEffect.GUARDIAN_TARGET;
+            } else if (args[1].equalsIgnoreCase("totem")) {
+                effect = EntityEffect.TOTEM_RESURRECT;
+            } else {
+                sender.sendMessage("That is not a valid effect!");
+                return false;
+            }
+        }
+
+        assert effect != null;
+        player.playEffect(effect);
+        player.sendMessage(ChatColor.DARK_PURPLE + "You have been jumpscared by " + sender.getName() + "!");
+        return true;
     }
 
     private boolean ask8ball(CommandSender sender, String[] args) {
@@ -172,8 +208,17 @@ public class Randoms implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if ("8ball".equals(command.getName())) {
             return new LinkedList<>();
-        } else {
+        } else if ("calculator".equals(command.getName())) {
             return null;
+        } else if ("jumpscare".equals(command.getName())) {
+            if (args.length == 1) {
+                List<String> players = new LinkedList<>();
+                sender.getServer().getOnlinePlayers().forEach(player -> players.add(player.getName()));
+                return players;
+            } else if (args.length == 2) {
+                return List.of("guardian", "totem");
+            }
         }
+        return null;
     }
 }

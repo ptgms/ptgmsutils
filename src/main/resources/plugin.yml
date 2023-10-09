@@ -26,3 +26,8 @@ commands:
     description: Set an Area new players can't leave without permission
     usage: /<command> <get/set> [radius]
     permission: ptgmsUtils.spawnlimit.set
+  jumpscare:
+    description: Scare someone
+    usage: /<command> <player> [type (totem, guardian)]
+    permission: ptgmsUtils.jumpscare
+    aliases: [js, scare]
