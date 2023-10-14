@@ -1,5 +1,6 @@
 package space.ptgms.util;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,25 +21,31 @@ public class TPClass implements CommandExecutor, TabCompleter {
         }
         if (sender.hasPermission("tpwild.wild")) {
             sender.sendMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Teleporting...");
-            int x = (int) (Math.random() * sender.getServer().getMaxWorldSize() * 2) - sender.getServer().getMaxWorldSize();
-            int z = (int) (Math.random() * sender.getServer().getMaxWorldSize() * 2) - sender.getServer().getMaxWorldSize();
+            int x = (int) (Math.random() * (sender.getServer().getMaxWorldSize() / 2) * 2) - (sender.getServer().getMaxWorldSize() / 2);
+            int z = (int) (Math.random() * (sender.getServer().getMaxWorldSize() / 2) - (sender.getServer().getMaxWorldSize() / 2));
             Location pos = sender.getServer().getWorlds().get(0).getHighestBlockAt(x, z).getLocation();
             pos.add(0, 1, 0);
+            int world = 0;
 //            check if its in water
             int failsafe = 0;
-            if (args.length == 1 && args[0].equalsIgnoreCase("unsafe")) {
+            int maxFail = 5;
+            if (Arrays.asList(args).contains("unsafe")) {
                 // user specified they are fine with water
-                failsafe = 5;
+                failsafe = maxFail;
             }
-            while (failsafe < 5 && sender.getServer().getWorlds().get(0).getBlockAt(pos).getType().toString().contains("WATER")) {
+            if (Arrays.asList(args).contains("end")) {
+                maxFail = 10;
+                world = 2;
+            }
+            while (failsafe < maxFail && sender.getServer().getWorlds().get(world).getBlockAt(pos).getType().toString().contains("WATER") || sender.getServer().getWorlds().get(world).getBlockAt(pos).getType().toString().contains("LAVA") || sender.getServer().getWorlds().get(world).getBlockAt(pos).getType().toString().contains("AIR")) {
                 x = (int) (Math.random() * sender.getServer().getMaxWorldSize() * 2) - sender.getServer().getMaxWorldSize();
                 z = (int) (Math.random() * sender.getServer().getMaxWorldSize() * 2) - sender.getServer().getMaxWorldSize();
-                pos = sender.getServer().getWorlds().get(0).getHighestBlockAt(x, z).getLocation();
-                pos.add(0, 1, 0);
+                pos = sender.getServer().getWorlds().get(world).getHighestBlockAt(x, z).getLocation();
                 failsafe++;
             }
+            pos = pos.add(0, 1, 0);
             sender.sendMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Teleporting to " + x + ", " + z);
-            ((Player) sender).teleport(sender.getServer().getWorlds().get(0).getHighestBlockAt(x, z).getLocation());
+            ((Player) sender).teleport(pos);
             return true;
         } else {
             sender.sendMessage("You do not have permission to use this command!");
@@ -48,11 +55,13 @@ public class TPClass implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            return List.of("unsafe");
-        } else if (args.length == 1) {
-            return List.of("unsafe");
+        LinkedList<String> list = new LinkedList<>();
+        if (!Arrays.asList(args).contains("unsafe")) {
+            list.add("unsafe");
         }
-        return new LinkedList<>();
+        if (!Arrays.asList(args).contains("end")) {
+            list.add("end");
+        }
+        return list;
     }
 }
