@@ -41,7 +41,7 @@ public class TPClass implements CommandExecutor, TabCompleter {
                 x = (int) (Math.random() * sender.getServer().getMaxWorldSize() * 2) - sender.getServer().getMaxWorldSize();
                 z = (int) (Math.random() * sender.getServer().getMaxWorldSize() * 2) - sender.getServer().getMaxWorldSize();
                 pos = sender.getServer().getWorlds().get(world).getHighestBlockAt(x, z).getLocation();
-                if (world == 2 && pos.getY() > 20) {
+                if (world == 2 && failsafe == maxFail && pos.getY() < 20) {
                     sender.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Didn't find a safe position to teleport to! Try again");
                     return true;
                 }
