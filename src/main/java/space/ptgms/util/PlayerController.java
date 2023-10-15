@@ -90,7 +90,7 @@ public class PlayerController implements Listener {
                 assert blockMeta != null;
                 String mobName = mobIDToName(Objects.requireNonNull((((CreatureSpawner) state).getSpawnedType()).getName()));
                 NamespacedKey key = new NamespacedKey(plugin, "spawner-type");
-                blockMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.DARK_PURPLE + String.format("%s Spawner", mobName));
+                blockMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + String.format("%s Spawner", mobName));
                 blockMeta.setLore(List.of(" ", String.format("Place this to spawn %ss", mobName)));
                 blockMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, Objects.requireNonNull((((CreatureSpawner) state).getSpawnedType()).getName()));
                 blockMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
