@@ -16,7 +16,8 @@ public final class Main extends JavaPlugin {
                 new Plugins(Objects.requireNonNull(this.getCommand("8ball")), new Randoms(), new Randoms()),
                 new Plugins(Objects.requireNonNull(this.getCommand("calculator")), new Randoms(), new Randoms()),
                 new Plugins(Objects.requireNonNull(this.getCommand("jumpscare")), new Randoms(), new Randoms()),
-                new Plugins(Objects.requireNonNull(this.getCommand("spawnlimit")), new SpawnLimit(), new SpawnLimit())
+                new Plugins(Objects.requireNonNull(this.getCommand("spawnlimit")), new SpawnLimit(), new SpawnLimit()),
+                new Plugins(Objects.requireNonNull(this.getCommand("donatexp")), new DonateXP(), new DonateXP())
         );
 
         for (Plugins plugin : commands) {

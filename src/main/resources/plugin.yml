@@ -31,3 +31,8 @@ commands:
     usage: /<command> <player> [type (totem, guardian, explosion, creeper)]
     permission: ptgmsUtils.jumpscare
     aliases: [js, scare]
+  donatexp:
+    description: Donate experience to someone
+    usage: /<command> <player> <amount>
+    permission: ptgmsUtils.donatexp
+    aliases: [donateexp, giveexp]
